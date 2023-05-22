@@ -6,7 +6,7 @@ This repository is the official PyTorch implementation of our CVPR 2023 paper:
 >
 > Wenbin Li, Zhichen Fan, Jing Huo, and Yang Gao
 >
-> Paper: [arXiv](https://arxiv.org/abs/2210.03591)
+> Paper: [arXiv](https://arxiv.org/abs/2210.03591), [CVF paper](https://openaccess.thecvf.com/content/CVPR2023/papers/Li_Modeling_Inter-Class_and_Intra-Class_Constraints_in_Novel_Class_Discovery_CVPR_2023_paper.pdf), [CVF supplemental](https://openaccess.thecvf.com/content/CVPR2023/supplemental/Li_Modeling_Inter-Class_and_CVPR_2023_supplemental.pdf)
 
 ![framework](images/framework.png)
 
@@ -190,7 +190,7 @@ If you use this code in your research, please cite our paper:
     booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
     month     = {June},
     year      = {2023},
-    pages     = {xxx-xxx}
+    pages     = {3449-3458}
 }
 ```
 Please also consider citing the paper of UNO:
