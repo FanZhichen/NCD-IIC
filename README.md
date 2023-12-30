@@ -8,7 +8,27 @@ This repository is the official PyTorch implementation of our CVPR 2023 paper:
 >
 > Paper: [arXiv](https://arxiv.org/abs/2210.03591), [CVF paper](https://openaccess.thecvf.com/content/CVPR2023/papers/Li_Modeling_Inter-Class_and_Intra-Class_Constraints_in_Novel_Class_Discovery_CVPR_2023_paper.pdf), [CVF supplemental](https://openaccess.thecvf.com/content/CVPR2023/supplemental/Li_Modeling_Inter-Class_and_CVPR_2023_supplemental.pdf)
 
-![framework](images/framework.png)
+![framework](assets/framework.png)
+
+## Results
+
+|                 Method                  |   Venue    |     CIFAR10      |   CIFAR100-20    |   CIFAR100-50    | ImageNet-1K |
+| :-------------------------------------: | :--------: | :--------------: | :--------------: | :--------------: | :---------: |
+|                $k$-means                |  Classic   |   72.5$\pm$0.0   |   56.3$\pm$1.7   |   28.3$\pm$0.7   |    71.9     |
+|                   KCL                   |  ICLR'18   |   72.3$\pm$0.2   |   42.1$\pm$1.8   |        –         |    73.8     |
+|                   MCL                   |  ICLR'19   |   70.9$\pm$0.1   |   21.5$\pm$2.3   |        –         |    74.4     |
+|                   DTC                   |  ICCV'19   |   88.7$\pm$0.3   |   67.3$\pm$1.2   |   35.9$\pm$1.0   |    78.3     |
+|                   RS                    |  ICLR'20   |   90.4$\pm$0.5   |   73.2$\pm$2.1   |   39.2$\pm$2.3   |    82.5     |
+|                   RS+                   |  ICLR'20   |   91.7$\pm$0.9   |   75.2$\pm$4.2   |   44.1$\pm$3.7   |    82.5     |
+|                 OpenMix                 |  CVPR'21   |       95.3       |        –         |        –         |    85.7     |
+|                   NCL                   |  CVPR'21   |   93.4$\pm$0.5   |   86.6$\pm$0.4   |        –         |    90.7     |
+|                  Joint                  |  ICCV'21   |   93.4$\pm$0.6   |   76.4$\pm$2.8   |        –         |    86.7     |
+|                  UNOv1                  |  ICCV'21   |   96.1$\pm$0.5   |   85.0$\pm$0.6   |   52.9$\pm$1.4   |    90.6     |
+|             UNOv2$^\dagger$             |  ICCV'21   |   93.3$\pm$0.4   |   90.5$\pm$0.7   |   62.3$\pm$1.4   |    90.7     |
+|                DualRank                 | NeurIPS'21 |   91.6$\pm$0.6   |   75.3$\pm$2.3   |        –         |    88.9     |
+|                  ComEx                  |  CVPR'22   |   93.6$\pm$0.3   |   85.7$\pm$0.7   |   53.4$\pm$1.3   |    90.9     |
+| [rKD](https://arxiv.org/abs/2307.09158) |  ICCV'23   |        –         |   91.2$\pm$0.1   |   65.3$\pm$0.6   |      –      |
+|                 **IIC**                 |  CVPR'23   | **99.1$\pm$0.0** | **92.4$\pm$0.2** | **65.8$\pm$0.9** |  **91.9**   |
 
 ## Requirements
 
