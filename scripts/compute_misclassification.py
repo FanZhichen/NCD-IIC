@@ -9,10 +9,8 @@ from main_discover import Discoverer
 
 
 def get_data(dataset_name, dataset_dir, num_labeled_classes, num_unlabeled_classes):
-    # get dataset class
     dataset_class = getattr(torchvision.datasets, dataset_name)
     test_set = dataset_class(root=dataset_dir, train=False, download=False, transform=torchvision.transforms.ToTensor())
-
     # labeled classes
     labeled_classes = range(num_labeled_classes)
     test_lab_indices = np.where(np.isin(np.array(test_set.targets), labeled_classes))[0]
@@ -25,14 +23,13 @@ def get_data(dataset_name, dataset_dir, num_labeled_classes, num_unlabeled_class
 
     lab_dataloader = torch.utils.data.DataLoader(test_lab_subset, batch_size=20, shuffle=False, num_workers=4)
     unlab_dataloader = torch.utils.data.DataLoader(test_unlab_subset, batch_size=20, shuffle=False, num_workers=4)
-
     return {'lab': lab_dataloader, 'unlab': unlab_dataloader}
 
 
 def compute_confusion_matrix(data_loader, ckpt_path):
     device = torch.device("cuda:0") if torch.cuda.is_available() else torch.device("cpu")
 
-    # load model
+    # load trained model
     model = Discoverer.load_from_checkpoint(ckpt_path).to(device)
     model.eval()
 
@@ -55,13 +52,13 @@ def compute_confusion_matrix(data_loader, ckpt_path):
                     preds_aware = outputs["logits_lab"]  # task-aware
                     preds_agnostic = torch.cat(
                         [outputs["logits_lab"],
-                         outputs["logits_unlab"][0],  # select first head
+                         outputs["logits_unlab"][0],  # pick up the first head as the best head
                          ],
                         dim=-1
                     )  # task-agnostic
                 # pass through unlabeled head
                 else:
-                    preds_aware = outputs["logits_unlab"][0]  # task-aware, select first head
+                    preds_aware = outputs["logits_unlab"][0]  # task-aware, pick up the first head as the best head
                     preds_agnostic = torch.cat(
                         [
                             outputs["logits_lab"].unsqueeze(0).expand(4, -1, -1),
@@ -77,7 +74,7 @@ def compute_confusion_matrix(data_loader, ckpt_path):
                 # label matching for clustering
                 if subset == 'unlab':
                     labels_aware = labels - labels.min()  # align labels for clustering on task-aware
-                    preds_agnostic_best_head = preds_agnostic[0]  # select first head
+                    preds_agnostic_best_head = preds_agnostic[0]  # pick up the first head as the best head
                     # hungarian algorithm
                     mapping_aware = compute_best_mapping(labels_aware.cpu().numpy(), preds_aware.cpu().numpy())
                     mapping_agnostic = compute_best_mapping(labels.cpu().numpy(), preds_agnostic_best_head.cpu().numpy())
@@ -156,7 +153,7 @@ def compute_best_mapping(y_true, y_pred):
 
 if __name__ == '__main__':
     dataset_name = 'CIFAR10'
-    dataset_dir = '/data/fzc'
+    dataset_dir = '/data/iic'
     num_labeled_classes = 5
     num_unlabeled_classes = 5
     ckpt_path = ['./CIFAR10_baseline.ckpt', './CIFAR10_inter.ckpt']

@@ -10,18 +10,16 @@ import matplotlib.pyplot as plt
 import matplotlib.patheffects as PathEffects
 
 # model
-# from main_discover import Discoverer
+from main_discover import Discoverer
 
 
 def get_data(dataset_name, dataset_dir):
-    # get dataset Class
     dataset_class = getattr(torchvision.datasets, dataset_name)
     train_set = dataset_class(root=dataset_dir, train=True, download=False, transform=torchvision.transforms.ToTensor())
     test_set = dataset_class(root=dataset_dir, train=False, download=False, transform=torchvision.transforms.ToTensor())
-    # concatenate all data
+    # concatenate training and test data
     dataset = train_set + test_set
     data_loader = torch.utils.data.DataLoader(dataset, batch_size=600, shuffle=False, num_workers=4)
-
     return data_loader
 
 
@@ -31,7 +29,7 @@ def prepare_logits(data_loader, ckpt_path, save_path):
     else:
         device = torch.device("cpu")
 
-    # load model
+    # load trained model
     model = Discoverer.load_from_checkpoint(ckpt_path).to(device)
     model.eval()
 
@@ -43,8 +41,8 @@ def prepare_logits(data_loader, ckpt_path, save_path):
             count += 1
             print(images.size(), labels.size(), count)
 
-            images = images.to(device)
             # forward
+            images = images.to(device)
             y_hat = model(images)
 
             # gather outputs
@@ -52,6 +50,7 @@ def prepare_logits(data_loader, ckpt_path, save_path):
 
             # concat: (num_heads, batch_size, num_labeled_classes + num_unlabeled_classes)
             logits_head = torch.cat([y_hat["logits_lab"], y_hat["logits_unlab"]], dim=-1)
+            # repeat logits_lab for 4 times to align dimensions
             logits_multihead = torch.cat([head for head in logits_head], dim=-1)
             print(logits_head.shape, logits_multihead.shape)
 
@@ -97,7 +96,7 @@ def fashion_scatter(x, colors):
 
 
 def t_sne(save_path):
-    # read logits
+    # load logits
     outputs = torch.load(save_path)
     logits = outputs['logits']
     labels = outputs['labels']
@@ -121,12 +120,12 @@ def t_sne(save_path):
 
 if __name__ == '__main__':
     dataset_name = 'CIFAR10'
-    dataset_dir = '/data/fzc'
+    dataset_dir = '/data/iic'
     ckpt_path = './CIFAR10_baseline.ckpt'
     save_path = './CIFAR10_baseline.pth'
 
     print('#################### Start #########################')
-    # data_loader = get_data(dataset_name, dataset_dir)
-    # prepare_logits(data_loader, ckpt_path, save_path)
+    data_loader = get_data(dataset_name, dataset_dir)
+    prepare_logits(data_loader, ckpt_path, save_path)
     t_sne(save_path)
     print('####################### Over #####################')
